@@ -21,8 +21,8 @@ public class HomeController : Controller
     {
         var user = new
         {
-            Email = "will@example.com",
-            FullName = "Will Huang"
+            Email = "bb@bb.com",
+            FullName = "bb"
         };
 
         var claims = new List<Claim>

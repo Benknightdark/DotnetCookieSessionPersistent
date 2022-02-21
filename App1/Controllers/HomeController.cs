@@ -11,10 +11,12 @@ namespace App1.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private IHttpContextAccessor _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IHttpContextAccessor context)
     {
         _logger = logger;
+        _context = context;
     }
 
     public async Task<IActionResult> Index()
@@ -35,7 +37,7 @@ public class HomeController : Controller
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
         await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
-
+        HttpContext.Session.SetString("Name", "aaaa");
         return View();
     }
     public IActionResult Privacy()

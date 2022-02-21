@@ -22,7 +22,14 @@ builder.Services.AddAuthentication("Identity.Application")
     {
         options.Cookie.Name = ".AspNet.SharedCookie";
     });
-
+builder.Services.AddDistributedSqlServerCache(options =>
+{
+    options.ConnectionString = builder.Configuration.GetConnectionString(
+        "db");
+    options.SchemaName = "dbo";
+    options.TableName = "SessionCache";
+});
+builder.Services.AddSession();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,7 +43,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// app.UseSession();
+app.UseSession();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

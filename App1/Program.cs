@@ -19,13 +19,20 @@ builder.Services.AddDbContext<MyKeysContext>(options =>
 builder.Services.AddDataProtection()
     .PersistKeysToDbContext<MyKeysContext>()
     .SetApplicationName("app");
-    
+
 builder.Services.AddAuthentication("Identity.Application")
     .AddCookie("Identity.Application", options =>
     {
         options.Cookie.Name = ".AspNet.SharedCookie";
     });
-
+builder.Services.AddDistributedSqlServerCache(options =>
+{
+    options.ConnectionString = builder.Configuration.GetConnectionString(
+        "db");
+    options.SchemaName = "dbo";
+    options.TableName = "SessionCache";
+});
+builder.Services.AddSession();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,7 +46,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-// app.UseSession();
+app.UseSession();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
